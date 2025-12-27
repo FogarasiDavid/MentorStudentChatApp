@@ -1,0 +1,6 @@
+@Mentor_Student_Platform_HostAddress = http://localhost:5058
+
+GET {{Mentor_Student_Platform_HostAddress}}/MentorDiakPlatform/
+Accept: application/json
+
+###
