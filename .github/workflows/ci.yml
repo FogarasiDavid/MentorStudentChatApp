@@ -1,4 +1,4 @@
-name: .NET CI
+name: .NET Build & Test
 
 on:
   push:
@@ -8,32 +8,24 @@ on:
 
 jobs:
   build-and-test:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore "Mentor-Student Platform.sln"
 
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build "Mentor-Student Platform.sln" --no-restore --configuration Release
 
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Run Tests
+      run: dotnet test "Mentor-Student Platform.sln" --no-build --configuration Release --verbosity normal
 
-  docker-build:
-    needs: build-and-test 
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Build Docker image
-      run: docker build . --file Dockerfile --tag MentorStudentApi:latest
+    - name: Test Docker Build
+      run: docker build . -f MentorStudent.Api/Dockerfile -t mentor-student-api-test
